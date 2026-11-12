@@ -121,6 +121,15 @@ input,select{font:inherit;color:inherit}
 .add-mini{flex:0 0 32px;width:32px;height:32px;border-radius:50%;background:var(--tram-tint);color:var(--tram);display:grid;place-items:center}
 .add-mini svg{width:16px;height:16px;stroke:currentColor;stroke-width:2.4;fill:none;stroke-linecap:round}
 .add-mini.done{background:var(--tram);color:#fff}
+.row.walk{min-height:44px;padding-top:7px;padding-bottom:7px;background:var(--fill-2);color:inherit;text-decoration:none}
+.row.walk .time{font-size:13px;color:var(--ink-2);font-weight:500}
+.wk-ic{flex:0 0 36px;text-align:center;font-size:18px}
+.wk-t{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wk-s{font-size:12.5px;color:var(--ink-2)}
+.wk-s b{color:var(--red)}
+.wk-go{font-size:13px;font-weight:600;color:var(--tram);flex:0 0 auto}
+.rm .gem{color:#B7791F;font-weight:700}
+.sug .why{font-size:12px;line-height:16px;font-weight:600;color:var(--tram);margin-bottom:1px}
 
 .empty{margin:0 16px 16px;background:var(--surface);border-radius:var(--r-md);padding:26px 22px;text-align:center}
 .empty h3{margin:0 0 4px;font-size:17px;font-weight:600}
@@ -267,6 +276,27 @@ input[type=time].field{-webkit-appearance:none;appearance:none;text-align:left}
 .toast i svg{width:11px;height:11px;stroke:#fff;stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
 
 /* ===== Intro animation ===== */
+/* ---------- Sign-in gate ---------- */
+#gate{position:fixed;inset:0;z-index:400;display:flex;align-items:center;justify-content:center;padding:24px;
+  background:linear-gradient(rgba(10,14,12,.55),rgba(10,14,12,.82)),url(bg.jpg) center/cover no-repeat,#111}
+#gate[hidden]{display:none}
+#gate.out{opacity:0;transition:opacity .45s ease;pointer-events:none}
+.gt-card{width:100%;max-width:360px;background:rgba(28,28,30,.72);-webkit-backdrop-filter:blur(22px);backdrop-filter:blur(22px);
+  border-radius:28px;padding:28px 22px 22px;color:#fff;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.45)}
+.gt-card h1{margin:0;font-family:'Pacifico',cursive;font-weight:400;font-size:34px;line-height:1.2;color:var(--yellow,#FFC93C)}
+.gt-card p{margin:6px 0 20px;color:rgba(255,255,255,.75);font-size:15px}
+.gt-who{display:flex;gap:14px;justify-content:center;margin-bottom:20px}
+.gt-who button{flex:1;max-width:140px;padding:14px 8px 12px;border-radius:20px;background:rgba(255,255,255,.08);border:2px solid transparent;color:#fff;font-size:17px;font-weight:600;transition:transform .15s,border-color .15s,background .15s}
+.gt-who button img{display:block;width:76px;height:76px;margin:0 auto 8px;border-radius:50%;object-fit:cover;background:#FFE7A3}
+.gt-who button.on{border-color:var(--yellow,#FFC93C);background:rgba(255,201,60,.16);transform:scale(1.03)}
+.gt-pw{width:100%;height:50px;border-radius:14px;border:0;padding:0 16px;font-size:17px;background:rgba(255,255,255,.12);color:#fff;outline:none;text-align:center;letter-spacing:.08em}
+.gt-pw::placeholder{color:rgba(255,255,255,.5);letter-spacing:0}
+.gt-pw:focus{box-shadow:0 0 0 2px var(--yellow,#FFC93C)}
+.gt-go{margin-top:12px;width:100%;height:50px;border-radius:14px;background:var(--yellow,#FFC93C);color:#2A2100;font-size:17px;font-weight:700}
+.gt-go:disabled{opacity:.45}
+.gt-err{min-height:20px;margin-top:10px;font-size:14px;color:#FF8A80}
+.gt-card.shake{animation:gtshake .4s}
+@keyframes gtshake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
 #intro{position:fixed;inset:0;z-index:200;background:linear-gradient(#7CC6F2 0%,#BFE6FA 58%,#E8F6FD 78%);overflow:hidden;transition:opacity .55s ease}
 #intro.out{opacity:0;pointer-events:none}
 #intro[hidden]{display:none}
@@ -508,6 +538,19 @@ body{background:transparent}
 </head>
 <body>
 <div class="photo-bg" aria-hidden="true"></div>
+<div id="gate" hidden role="dialog" aria-label="Sign in">
+  <form class="gt-card" id="gtCard" autocomplete="off">
+    <h1>Melbourne '26</h1>
+    <p>Who's this?</p>
+    <div class="gt-who">
+      <button type="button" data-who="Ash"><img id="gtAsh" alt="">Ash</button>
+      <button type="button" data-who="Fred"><img id="gtFred" alt="">Fred</button>
+    </div>
+    <input class="gt-pw" id="gtPw" type="password" placeholder="Password" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="go">
+    <button class="gt-go" id="gtGo" type="submit" disabled>Unlock</button>
+    <div class="gt-err" id="gtErr" aria-live="polite"></div>
+  </form>
+</div>
 <div id="intro" aria-label="Intro animation" role="img">
   <div class="in-stage" id="inStage"><div class="in-cam" id="inCam">
     <div class="in-sun"></div>
@@ -801,11 +844,11 @@ const META = {
   section8:{t:["Bars & music"],r:4.4,n:1964,pl:2,hrs:H("12:00-23:00","12:00-23:00","12:00-23:00","12:00-23:00","12:00-01:00","12:00-01:00","12:00-01:00")},
   siglo:{t:["Rooftops & views","Cocktails"],r:4.1,n:1131,pl:2,hrs:H("","17:00-03:00","17:00-03:00","17:00-03:00","17:00-03:00","17:00-03:00","17:00-03:00")},
   skydeck:{t:["Rooftops & views"],r:4.5,n:17689,pl:2},
-  crown:{t:["Outdoors"],pl:0},
+  crown:{cat:"place",t:["Walks & views"],pl:0},
   arbory:{name:"Arbory Bar & Eatery",t:["Outdoors","Bars & music"],r:4.2,n:4862,pl:2,area:"1 Flinders Walk, on the Yarra",desc:"A long riverside bar on an old railway platform with spritzes, pizza and city views. Its floating sister bar, Arbory Afloat, opens in the warmer months.",tip:"Happy hour oysters. Grab a river-edge table.",hrs:H("11:00-22:00","11:00-22:00","11:00-22:00","11:00-22:00","11:00-23:00","11:00-01:00","10:00-01:00")},
   cherrybar:{t:["Bars & music"],r:4.4,n:1071,pl:2,lat:-37.8129,lng:144.9713,hrs:H("19:00-03:00","19:00-03:00","19:00-03:00","19:00-03:00","19:00-03:00","19:00-05:00","19:00-05:00")},
   everleigh:{t:["Cocktails"],r:4.7,n:659,pl:3},
-  penguins:{t:["Outdoors"],pl:0},
+  penguins:{cat:"place",t:["Walks & views","Parks & beaches"],pl:0},
   foofighters:{t:["Concerts"]}, bensonboone:{t:["Concerts"]}, khalid:{t:["Concerts"]}, joji:{t:["Concerts"]}, jackjohnson:{t:["Concerts"]},
   myfairlady:{t:["Theatre"]}, roomwithview:{t:["Theatre"]}, fiddler:{t:["Theatre"]}, allabouteve:{t:["Theatre"]},
   msobrahms:{t:["Opera & classical"]}, laboheme:{t:["Opera & classical"]}, operauplate:{t:["Opera & classical"]}, msorequiem:{t:["Opera & classical"]},
@@ -816,11 +859,11 @@ const META = {
 };
 V.forEach(v=>{ const m=META[v.id]; if(m) Object.assign(v,m); if(v.pl!=null) v.price = v.pl===0?"Free":"$".repeat(v.pl); });
 const GROUPS = {
-  food:["Italian","Asian","Modern Aus","Latin","Greek","Steak"],
+  food:["Hidden gems","Italian","Asian","Modern Aus","Latin","Greek","Steak"],
   cafe:["Brunch","Coffee","Pastries","Classic"],
-  night:["Rooftops & views","Cocktails","Bars & music","Outdoors"],
-  event:["Concerts","Theatre","Opera & classical","Exhibitions"],
-  place:["Landmarks","Laneways & arcades","Galleries & museums","Markets","Parks & beaches","Neighbourhoods"]
+  night:["Hidden gems","Rooftops & views","Cocktails","Bars & music","Outdoors"],
+  event:["Comedy","Concerts","Theatre","Opera & classical","Exhibitions"],
+  place:["Hidden gems","Landmarks","Walks & views","Laneways & arcades","Galleries & museums","Markets","Parks & beaches","Neighbourhoods"]
 };
 const GROUP_LABEL = {"Classic":"Old-school","Theatre":"Theatre & musicals","Coffee":"Coffee bars","Latin":"Latin American","Modern Aus":"Modern Aussie"};
 const SORTS = {
@@ -1026,6 +1069,127 @@ const SHOPS = [
   known:"Big range, lingerie and dress-up outfits, and late opening hours.",best:["Late night","Big range"],tip:"18+ only. Open till midnight on Fridays and Saturdays."}
 ];
 SHOPS.forEach(s=>{ s.cat="shop"; V.push(s); });
+/* ---------- Hidden gems (researched Nov 2026) ---------- */
+const GEMS = [
+ {id:"fallfromgrace",cat:"night",name:"Fall From Grace",area:"27 King St, CBD",lat:-37.8183,lng:144.9578,pl:2,t:["Cocktails","Hidden gems"],
+  hrs:H("","","17:00-01:00","17:00-01:00","17:00-01:00","17:00-01:00","17:00-01:00"),
+  desc:"A secret cellar bar behind a sliding bookshelf, straight down King St from the Airbnb.",
+  about:"Walk into State of Grace, the glamorous European-style bar on King St, find the library, and slide the bookcase aside. Downstairs is Fall From Grace: exposed brick, low ceilings, Victorian couches and a speakeasy feel. It's straight down King St from your Airbnb, about a 10-minute walk.",
+  known:"Classic and signature cocktails, like the salted-caramel espresso martini.",best:["Date night","Straight down King St"],tip:"Cellar bar opens Tue–Sat from 5pm. State of Grace upstairs is open daily."},
+ {id:"lochkey",cat:"night",name:"Loch & Key",area:"34 Franklin St, CBD",lat:-37.8087,lng:144.9614,pl:2,t:["Cocktails","Hidden gems"],
+  hrs:H("","","","17:00-01:00","17:00-01:00","17:00-03:00","17:00-03:00"),
+  desc:"Through a bookcase door inside the Captain Melville, Melbourne's oldest pub.",
+  about:"Inside the historic Captain Melville pub, a bookcase hides a door and a staircase up to an after-hours cocktail bar with a big balcony. Easy to pair with Queen Victoria Market nearby.",
+  known:"Cocktails on the balcony above the city's oldest pub.",best:["Late night","Date night"],tip:"Hours vary. Check Google before you go."},
+ {id:"newgold",cat:"night",name:"New Gold Mountain",area:"21 Liverpool St, CBD",lat:-37.8112,lng:144.9719,pl:3,t:["Cocktails","Hidden gems"],
+  hrs:H("","","18:00-02:00","18:00-02:00","18:00-02:00","18:00-03:00","18:00-03:00"),
+  desc:"No sign out front. Look for the golden door beside Double Happiness.",
+  about:"A two-level Chinese-inspired cocktail den hidden behind an unmarked golden door near Chinatown. Dim, ornate and intimate, with excellent drinks and late hours.",
+  known:"Creative cocktails in a lantern-lit, hidden room.",best:["Late night","Cocktails"],tip:"Hours vary. Check Google before you go."},
+ {id:"manchuria",cat:"night",name:"Manchuria",area:"Level 1, 7 Waratah Pl, Chinatown",lat:-37.8118,lng:144.9674,pl:3,t:["Cocktails","Hidden gems"],
+  hrs:H("","","17:00-01:00","17:00-01:00","17:00-01:00","17:00-01:00","17:00-01:00"),
+  desc:"An unmarked door in a Chinatown laneway, then up a stairwell.",
+  about:"One of Melbourne's best-kept secrets: a moody, 1930s Shanghai-styled cocktail bar up a stairwell from a tiny Chinatown lane. Great for a quieter drink after dinner on Little Bourke.",
+  known:"Asian-inspired cocktails in a hidden upstairs room.",best:["After dinner","Date night"],tip:"Hours vary. Check Google before you go."},
+ {id:"littlelon",cat:"night",name:"Little Lon Distilling Co",area:"17 Casselden Pl, CBD",lat:-37.8104,lng:144.9706,pl:2,t:["Cocktails","Hidden gems"],
+  hrs:H("","","","","16:00-22:00","16:00-22:00","14:00-22:00"),
+  desc:"A tiny gin bar inside the last single-storey house in the CBD, once a brothel.",
+  about:"Down a lane off Little Lonsdale St, this 1877 red-brick cottage was a brothel and sly grog shop in Melbourne's old red-light district. Now it's a craft gin distillery with a tiny bar right next to the still, plus a flower-lined gin garden. Gin masterclasses include a history of the area.",
+  known:"House-made gins, a martini and the gin masterclass.",best:["Date night","History","Something different"],tip:"Opens Thu–Sat. Masterclasses sometimes take over the bar, so call ahead or book one."},
+ {id:"trinket",cat:"night",name:"Trinket",area:"87 Flinders Ln, CBD",lat:-37.8157,lng:144.9712,pl:2,t:["Cocktails","Hidden gems"],
+  hrs:all("16:00-01:00"),
+  desc:"Walk through the wardrobe to a hidden cellar bar.",
+  about:"A pretty bar and eatery on Flinders Lane with a secret: step through the wardrobe and down the stairs to a cosy hidden cellar bar.",
+  known:"Cocktails in the secret cellar.",best:["Date night","Close to Lucy Liu & Chin Chin"],tip:"Hours vary. Check Google before you go."},
+ {id:"chucklepark",cat:"night",name:"Chuckle Park",area:"322 Little Collins St, CBD",lat:-37.8151,lng:144.9643,pl:1,t:["Bars & music","Hidden gems"],
+  hrs:all("12:00-23:00"),
+  desc:"A caravan bar in a laneway under flowers and fairy lights.",
+  about:"A tiny laneway bar run out of a vintage caravan, with seating under a canopy of hanging plants and fairy lights. Relaxed, cheap and very Melbourne.",
+  known:"Casual drinks and toasties in a fairy-lit laneway.",best:["Casual drink","Afternoon"],tip:"Mostly outdoor, so it's best on a fine evening."},
+ {id:"aboveboard",cat:"night",name:"Above Board",area:"Level 1, 306 Smith St, Collingwood",lat:-37.8001,lng:144.9842,pl:3,t:["Cocktails","Hidden gems"],
+  hrs:H("","","17:00-00:00","17:00-00:00","17:00-00:00","17:00-01:00","17:00-01:00"),
+  desc:"A World's 50 Best-listed bar behind an unmarked door inside Beermash.",
+  about:"A tiny, world-renowned cocktail bar where the bartender works from an island in the middle of the room. Find the unmarked door inside Beermash on Smith St, then head up the stairs. Seats are limited and it's walk-in only.",
+  known:"Precise, classic cocktails and a martini that people travel for.",best:["Cocktail lovers","Date night"],tip:"Walk-ins only and very small. Go early. Pairs well with dinner in Fitzroy."},
+ {id:"soi38",cat:"food",name:"Soi 38",area:"235 Bourke St, CBD",lat:-37.8129,lng:144.9666,pl:1,t:["Asian","Hidden gems"],
+  hrs:all("11:00-15:00,17:00-22:00"),
+  desc:"Cult Thai street food that started in a car park. Boat noodles at lunch.",
+  about:"Soi 38 built its following serving Bangkok-style street food out of a CBD car park, and moved to Bourke St at the end of 2024, keeping the street-food feel. Lunch is all about noodle soups. At night it turns into Thai hotpot and grill.",
+  known:"Boat noodles, tom yum noodle soup, and hotpot or grill sets at night.",best:["Cheap eats","Lunch"],tip:"Expect a queue at peak lunch. Some older listings still show the car-park address."},
+ {id:"dodee",cat:"food",name:"Dodee Paidang",area:"Basement, 353 Little Collins St",lat:-37.8155,lng:144.9628,pl:1,t:["Asian","Hidden gems"],
+  hrs:H("12:00-22:00","11:00-15:00,17:00-22:00","11:00-15:00,17:00-22:00","11:00-15:00,17:00-22:00","11:00-15:00,17:00-22:00","11:00-15:00,17:00-23:00","12:00-23:00"),
+  desc:"A buzzing basement Thai diner with robot waiters, just off Little Collins.",
+  about:"Down the stairs beneath the Hotel Causeway, this colourful, loud basement feels like a Bangkok diner and is packed with Thai locals. Unapologetically authentic, with little robot waiters bringing food to the table. A short walk from the Airbnb.",
+  known:"Tom yum noodle soup, papaya salad, curry puffs and skewers.",best:["Cheap eats","Groups","Close to the Airbnb"],tip:"Enter via Equitable Place, next to the Hotel Causeway."},
+ {id:"ishizuka",cat:"food",name:"Ishizuka",area:"Basement, 139 Bourke St, CBD",lat:-37.8117,lng:144.9699,pl:4,t:["Asian","Hidden gems"],
+  hrs:H("","","18:00-22:00","18:00-22:00","18:00-22:00","18:00-22:00","18:00-22:00"),
+  desc:"A 16-seat basement kaiseki restaurant. An 11-course splurge.",
+  about:"Hidden below Bourke St, Ishizuka serves traditional Japanese kaiseki: an elegant 11-course tasting menu for just 16 guests at a time. Quiet, precise and special.",
+  known:"The seasonal 11-course kaiseki menu.",best:["Special occasion","Splurge","Date night"],tip:"Bookings essential, and it books out. Expect fine-dining prices."},
+ {id:"butchersdiner",cat:"food",name:"Butchers Diner",area:"10 Bourke St, CBD",lat:-37.8106,lng:144.9727,pl:1,t:["Steak","Hidden gems"],
+  hrs:all("24h"),
+  desc:"A hole-in-the-wall American diner with one of the city's best burgers.",
+  about:"Chequerboard floors and a meat cabinet set the scene at this tiny, old-school diner at the top of Bourke St. Cheap daily specials, a famous open burger and cold beers. A favourite late-night feed after the theatre.",
+  known:"The burger, aged steaks and late-night specials.",best:["Late night","Cheap eats","After a show"],tip:"Known for late opening. Check the hours on Google."},
+ {id:"stellarnights",cat:"place",name:"Stellar Nights stargazing",area:"Melbourne Observatory, Royal Botanic Gardens",lat:-37.8297,lng:144.9757,price:"$45 pp",t:["Parks & beaches","Hidden gems"],
+  hrs:all("19:30-21:45"),
+  desc:"A guided night tour of the 1860s observatory, looking through historic telescopes.",
+  about:"Run by the Astronomical Society of Victoria, these small-group night tours take you inside the historic Melbourne Observatory in the Botanic Gardens to view the night sky through old and modern telescopes. It's on during your trip, as it runs until 30 November 2026.",
+  known:"Telescope viewing, the historic observatory and short astronomy talks.",best:["Date night","Something different"],tip:"Select nights only, about 2 hours 15 minutes, $45 each. Bookings essential. It goes ahead if it's cloudy, with talks instead."},
+ {id:"cheesecellar",cat:"place",name:"The Cheese Cellar, Spring Street Grocer",area:"157 Spring St, CBD",lat:-37.8114,lng:144.9734,pl:2,t:["Markets","Hidden gems"],
+  hrs:all("10:00-20:00"),
+  desc:"An underground Art Deco cheese cave beneath a gourmet grocer.",
+  about:"Behind a set of glass doors below Spring Street Grocer is a subterranean cheese room where cheesemongers tend giant wheels and offer tastings. Grab picnic supplies and walk to the Fitzroy or Treasury Gardens nearby.",
+  known:"Cheese tastings and picnic supplies.",best:["Picnic","Foodies"],tip:"Hours vary. Check Google before you go."},
+ {id:"almamagic",cat:"place",name:"William Alma Magic Collection",area:"State Library Victoria, 328 Swanston St",lat:-37.8097,lng:144.9651,price:"Free",t:["Galleries & museums","Hidden gems"],
+  hrs:all("10:00-18:00"),
+  desc:"A secret collection of around 2,000 magic books you can ask to see.",
+  about:"Hidden inside the State Library is a collection of around 2,000 books and objects about magic and conjuring. Most visitors never know it's there. Ask staff how to request items to view, then head up to the domed reading room.",
+  known:"Rare magic books and memorabilia.",best:["Rainy day","Something different"],tip:"Items must be requested, so ask at the library desk or check the website beforehand."},
+ {id:"abbotsford",cat:"place",name:"Abbotsford Convent & Children's Farm",area:"1 St Heliers St, Abbotsford",lat:-37.8030,lng:145.0040,price:"Free",t:["Parks & beaches","Hidden gems"],
+  hrs:all("09:00-16:30"),
+  desc:"A 19th-century convent turned arts precinct, next to a working farm on the Yarra.",
+  about:"A grand old convent on a bend of the Yarra, now full of galleries, studios and cafés, with gardens to wander. Right next door is the Collingwood Children's Farm, a real working farm only about 4 km from the city. It's not just for kids: you can pat the animals and even help milk the cow.",
+  known:"The convent gardens and galleries, the farm animals and the Farm Café.",best:["Slow morning","Something different"],tip:"Take the train to Victoria Park or a tram along Johnston St. The farm has an entry fee."}
+];
+GEMS.forEach(g=>{ if(g.pl!=null&&!g.price) g.price=g.pl===0?"Free":"$".repeat(g.pl); V.push(g); });
+/* ---------- Comedy during the trip (researched 12 Nov 2026) ---------- */
+const COMEDY = [
+ {id:"rhysjames",name:"Rhys James: Chop Logic",area:"Comedy Republic, 231 Bourke St",lat:-37.8129,lng:144.9665,price:"Tickets",
+  sessions:[["2026-11-14","20:00"]],desc:"UK Mock the Week star. An extra Melbourne show added after the first sold out.",
+  about:"Rhys James, the sharp, fast-talking regular from Mock the Week and QI, brings his new hour Chop Logic to Comedy Republic, a 130-seat theatre built for comedy. The first Melbourne show sold out, so this added Saturday show is the last chance to catch it.",
+  known:"Fast, gag-dense overthinking and big ideas.",best:["Date night","Top pick"],tip:"Start time not confirmed. Check your ticket. You're free after the football finishes around 5pm."},
+ {id:"anneedmonds",name:"Anne Edmonds & Lloyd Langford: Work in Progress",area:"Basement Comedy Club, 114 Exhibition St",lat:-37.8126,lng:144.9697,price:"Tickets",
+  sessions:[["2026-11-14","20:30"]],desc:"Two much-loved comedians trying out brand-new material in a basement club.",
+  about:"Anne Edmonds and Lloyd Langford test new material at the Basement Comedy Club, an intimate room under Morris House in the CBD. Work-in-progress shows are loose, cheap and often the funniest nights out.",
+  known:"Brand-new jokes before they hit the big stages.",best:["Comedy fans","Night out"],tip:"Start time not confirmed. Check your ticket."},
+ {id:"lucaszelnick",name:"Lucas Zelnick",area:"The Comics Lounge, 26 Errol St, North Melbourne",lat:-37.8031,lng:144.9496,price:"Tickets",
+  sessions:[["2026-11-14","20:00"]],desc:"US stand-up at Melbourne's biggest comedy club.",
+  about:"The Comics Lounge has been Melbourne's home of stand-up for over 20 years. You can have dinner there before the show.",
+  known:"A big comedy club atmosphere.",best:["Night out"],tip:"Doors and dinner from 6:30pm, show around 8pm. Arrive by 7:15pm. About a 15-minute tram ride."},
+ {id:"comedyuntamed",name:"Comedy Untamed",area:"The Coopers Inn, 282 Exhibition St",lat:-37.8086,lng:144.9693,price:"About $34",
+  sessions:[["2026-11-14","18:00"]],desc:"An early stand-up showcase in a CBD pub, 6:00 to 7:30pm.",
+  about:"A lineup of Melbourne comedians in the back room of a classic CBD pub. It's an early show, so you can still go out for dinner afterwards.",
+  known:"A mix of local comedians in a relaxed pub room.",best:["Early show","Cheap night"],tip:"Finishes around 7:30pm. A short walk from Parliament Station."},
+ {id:"ergou",name:"Er Gou, \"A Dog Named Love\"",area:"Palais Theatre, St Kilda",lat:-37.8677,lng:144.9765,price:"Tickets",
+  sessions:[["2026-11-15","19:30"]],desc:"A stand-up show at the grand Palais Theatre in St Kilda.",
+  about:"A comedy show at St Kilda's beautiful 1920s Palais Theatre.",known:"A big-theatre comedy night by the beach.",best:["Comedy fans"],tip:"Heads up: this clashes with your Kushiro booking at 7pm."},
+ {id:"crmainstage",name:"Main Stage at Comedy Republic",area:"Comedy Republic, 231 Bourke St",lat:-37.8129,lng:144.9665,price:"$22–$39",
+  sessions:[["2026-11-18","20:00"],["2026-11-19","20:00"],["2026-11-20","20:00"]],desc:"The signature lineup show of local and touring comics, Wed to Sat at 8pm.",
+  about:"Comedy Republic's biggest regular show: an all-star rotating lineup of local and touring comedians in a purpose-built comedy theatre. It sells out regularly. Thursday works neatly after your 6pm steak dinner, about a 10-minute walk away.",
+  known:"A different lineup every night.",best:["After dinner","Date night"],tip:"18+. Book ahead because it often sells out."},
+ {id:"basementfri",name:"Basement Comedy Club: Friday show",area:"Basement Comedy Club, 114 Exhibition St",lat:-37.8126,lng:144.9697,price:"Tickets",
+  sessions:[["2026-11-20","20:30"]],desc:"The weekly Friday headline show at the basement club.",
+  about:"Every Friday and Saturday night the Basement Comedy Club puts on a lineup of some of the biggest names in comedy, in a cosy room under Morris House.",
+  known:"Big names in a small room.",best:["Last night out"],tip:"Check the lineup and start time when booking."},
+ {id:"youwouldnt",name:"You Wouldn't Podcast: CBD Tour",area:"The Capitol, 113 Swanston St",lat:-37.8155,lng:144.9665,price:"Tickets",
+  sessions:[["2026-11-20","19:30"]],desc:"A live podcast comedy show in a stunning 1920s cinema.",
+  about:"A live recording of the comedy podcast, staged in The Capitol, a gorgeous 1924 picture palace with a famous crystalline ceiling.",
+  known:"Live podcast laughs under The Capitol's crystal ceiling.",best:["Podcast fans","Last night out"],tip:"Start time not confirmed. Check your ticket."}
+];
+COMEDY.forEach(c=>{ c.cat="event"; c.t=["Comedy"]; V.push(c); });
+
+
 { const i=V.findIndex(v=>v.id==="joji"); if(i>-1) V.splice(i,1); }  // shh, it's a surprise
 const VBY = Object.fromEntries(V.map(v=>[v.id,v]));
 
@@ -1225,6 +1389,114 @@ function splitRow(list){
   const start=list[0].time; const t=fmtT(start);
   return '<div class="row split"><span class="time">'+t.replace(/(am|pm)$/,"")+'<small>'+(t.match(/(am|pm)$/)||[""])[0]+'</small></span><div class="cols" style="--n:'+Math.min(list.length,3)+'">'+list.map(it=>miniCard(it,start)).join("")+'</div></div>';
 }
+/* ---------- Nearby ideas: suggestions close to the day's plans ---------- */
+const SUG_DUR={food:90,cafe:45,night:120,place:75,shop:60,event:150};
+const ANCHOR_HOME={f1:{end:"09:45",lbl:"you land"},f2:{dur:30,lbl:"check-in"},f3:{dur:0,lbl:"checkout"}};
+const walkMin=(a,b)=>Math.max(1,Math.round(distKm(a,b)*1.25*1000/80));
+const m2t=m=>String(Math.floor(m/60)).padStart(2,"0")+":"+String(m%60).padStart(2,"0");
+function slotCats(m){
+  if(m<660) return ["cafe"];
+  if(m<870) return ["food","cafe"];
+  if(m<1020) return ["cafe","place","shop"];
+  if(m<1110) return ["night","place"];
+  if(m<1230) return ["food","night"];
+  return ["night"];
+}
+function sugVerb(cat,m){ return cat==="cafe"?"Coffee":cat==="food"?(m<960?"Lunch":"Dinner"):cat==="night"?"Drinks":cat==="shop"?"Browse":"Wander"; }
+function nearbyIdeas(ds){
+  const items=itemsForDay(ds);
+  const busy=items.filter(i=>i.time).map(i=>{ const st=toMin(i.time); let en;
+    if(i.end) en=toMin(i.end); else if(i.gift) en=st+210; else if(ANCHOR_HOME[i.id]) en=ANCHOR_HOME[i.id].end?toMin(ANCHOR_HOME[i.id].end):st+ANCHOR_HOME[i.id].dur; else { const v=i.ref?VBY[i.ref]:null; en=st+(SUG_DUR[v?v.cat:(i.ci||"")]||60); }
+    return [st,Math.max(en,st+1)]; });
+  if(ds===DAYS[0]) busy.push([0,585]);                 // before you land
+  if(ds===DAYS[DAYS.length-1]) busy.push([765,1440]);  // after you leave for the airport
+  const free=(a,b)=>a>=480 && b<=1410 && !busy.some(([x,y])=>a<y && b>x);
+  const taken=new Set(items.map(i=>i.ref).filter(Boolean));
+  const anchors=[];
+  items.forEach(i=>{
+    if(!i.time||i.gift) return;
+    const v=i.ref?VBY[i.ref]:null; const st=toMin(i.time);
+    if(ANCHOR_HOME[i.id]){ const h=ANCHOR_HOME[i.id]; const en=h.end?toMin(h.end):st+h.dur;
+      anchors.push({lat:HOME.lat,lng:HOME.lng,name:"the Airbnb",lbl:h.lbl,st,en,cat:"home",onlyAfter:i.id==="f1"}); return; }
+    const pt=v||(i.lat?i:null); if(!pt) return;
+    const cat=v?v.cat:(i.ci||"custom");
+    const en=i.end?toMin(i.end):st+(SUG_DUR[cat]||60);
+    anchors.push({lat:pt.lat,lng:pt.lng,name:i.name,st,en,cat,vid:v?v.id:null});
+  });
+  const out=[], used=new Set();
+  const jit=id=>{let h=0;for(const c of id+ds)h=(h*31+c.charCodeAt(0))>>>0;return (h%7)*0.025;};
+  function pick(a,side,base,cats){
+    let best=null;
+    (cats||slotCats(base)).forEach((cat,ci)=>{
+      if(cat===a.cat) return;
+      V.forEach(v=>{
+        if(v.cat!==cat||v.sessions||!v.hrs||!v.lat||v.id===a.vid||taken.has(v.id)||used.has(v.id)) return;
+        const w=walkMin(a,v); if(w>(a.near?18:12)) return;
+        const dur=side==="before"?Math.min(SUG_DUR[cat],60):SUG_DUR[cat];
+        const t=a.near?base:side==="before"?Math.floor((a.st-w-dur)/15)*15:Math.ceil((a.en+w)/15)*15;
+        if(!free(t,t+dur)) return;
+        const r=hrsOn(v,ds); if(!r||!isOpenAt(r,t)||!isOpenAt(r,t+Math.min(dur,45)-5)) return;
+        const sc=(v.r||4.2)-w*0.04-jit(v.id)+(ci===0?0.15:0);
+        if(!best||sc>best.sc) best={v,t,w,sc,side,a,cat};
+      });
+    });
+    if(best){ used.add(best.v.id); out.push(best); busy.push([best.t,best.t+(side==="before"?Math.min(SUG_DUR[best.cat],60):SUG_DUR[best.cat])]); }
+  }
+  anchors.forEach(a=>{
+    if(!a.onlyAfter && a.cat!=="home") pick(a,"before",a.st-70);
+    pick(a,"after",a.en+10);
+  });
+  if(!anchors.some(a=>a.cat!=="home") && out.length<2){
+    const home={lat:HOME.lat,lng:HOME.lng,name:"the Airbnb",cat:"home",near:true};
+    [[570,["cafe"]],[750,["food","cafe"]],[1140,["food"]]].forEach(([m,c])=>{ if(out.length>=3) return; pick(Object.assign({},home,{st:m,en:m-10}),"after",m,c); });
+  }
+  return out.sort((x,y)=>x.t-y.t).slice(0,4);
+}
+function ideasHTML(ds){
+  const list=nearbyIdeas(ds); if(!list.length) return "";
+  return '<div class="sh"><h2>Nearby ideas</h2><span>Close to your plans</span></div><div class="group sug">'+list.map(s=>{
+    const v=s.v, a=s.a, verb=sugVerb(s.cat,s.t);
+    const why=a.near?verb+" near the Airbnb":a.cat==="home"?verb+" after "+a.lbl:(verb+" "+s.side+" "+a.name);
+    const meta=['<span>'+fmtT(m2t(s.t))+'</span>'];
+    if(v.r) meta.push('<span class="star">'+v.r.toFixed(1)+'</span>');
+    meta.push('<span>'+s.w+' min walk'+(a.cat==="home"?" from the Airbnb":"")+'</span>');
+    return '<div class="row" style="cursor:pointer" data-open-v="'+v.id+'" role="button" tabindex="0">'+tileFor(v)+
+      '<span class="rb"><div class="why">'+esc(why)+'</div><div class="rt">'+esc(v.name)+'</div><div class="rm">'+meta.join("")+'</div></span>'+
+      '<button class="add-mini" data-sug="'+v.id+'" data-st="'+m2t(s.t)+'"'+(s.side==="before"?' data-sb="1"':'')+' aria-label="Add '+esc(v.name)+' to plan">'+svg("plus")+'</button></div>';
+  }).join("")+'</div>';
+}
+/* ---------- Walking legs between consecutive plans ---------- */
+function locOf(i){
+  if(!i||i.gift) return null;
+  if(i.id==="f2"||i.id==="f3") return {lat:HOME.lat,lng:HOME.lng,name:"the Airbnb"};
+  const v=i.ref?VBY[i.ref]:null; if(v&&v.lat) return {lat:v.lat,lng:v.lng,name:v.name};
+  if(i.lat) return {lat:i.lat,lng:i.lng,name:i.name};
+  return null;
+}
+function itemEnd(i){ const st=toMin(i.time); if(i.end) return toMin(i.end); if(ANCHOR_HOME[i.id]) return ANCHOR_HOME[i.id].end?toMin(ANCHOR_HOME[i.id].end):st+ANCHOR_HOME[i.id].dur;
+  const v=i.ref?VBY[i.ref]:null; return st+(SUG_DUR[v?v.cat:(i.ci||"")]||60); }
+function legHTML(a,b){
+  if(!a.time||!b.time) return "";
+  const A=locOf(a), B=locOf(b); if(!A||!B) return "";
+  const km=distKm(A,B); if(km<0.06) return "";
+  const walk=Math.max(1,Math.round(km*1.25*1000/80)); const byFoot=walk<=25;
+  const mins=byFoot?walk:Math.round(8+km*1.25*3);
+  const st=toMin(b.time); let leave=Math.floor((st-mins)/5)*5; const prevEnd=itemEnd(a);
+  const tight=leave<prevEnd; if(leave<toMin(a.time)) leave=toMin(a.time);
+  const url="https://www.google.com/maps/dir/?api=1&origin="+A.lat+","+A.lng+"&destination="+B.lat+","+B.lng+"&travelmode="+(byFoot?"walking":"transit");
+  const t=fmtT(m2t(leave));
+  return '<a class="row walk" href="'+url+'" target="_blank" rel="noopener"><span class="time">'+t.replace(/(am|pm)$/,"")+'<small>'+(t.match(/(am|pm)$/)||[""])[0]+'</small></span>'+
+    '<span class="wk-ic" aria-hidden="true">'+(byFoot?"🚶":"🚋")+'</span><span class="rb"><div class="wk-t">'+(byFoot?"Walk to ":"Head to ")+esc(B.name)+'</div>'+
+    '<div class="wk-s">'+mins+' min'+(byFoot?" walk":" by tram or Uber")+' · '+(Math.round(km*1.25*10)/10)+' km'+(tight?' · <b>Leave by '+esc(t)+'</b>':'')+'</div></span><span class="wk-go">Directions</span></a>';
+}
+function planListHTML(items){
+  const cl=clusters(items); let h="";
+  cl.forEach((c,k)=>{
+    if(k>0 && c.length===1 && cl[k-1].length===1) h+=legHTML(cl[k-1][0],c[0]);
+    h+=c.length>1?splitRow(c):(c[0].gift?giftRow(c[0]):planRow(c[0]));
+  });
+  return h;
+}
 function renderPlan(){
   const n=nowMel();
   let h='<div class="lt"><div><h1>Melbourne</h1><div class="sub">14 – 21 November</div></div>'+syncPill()+'</div>';
@@ -1236,8 +1508,9 @@ function renderPlan(){
     return '<button class="wd'+(ds===S.day?" sel":"")+(has?" has":"")+(ds===n.ds?" today":"")+'" data-day="'+ds+'" role="tab" aria-selected="'+(ds===S.day)+'"><span>'+WD[d.getDay()].charAt(0)+'</span><b>'+d.getDate()+'</b><i></i></button>';}).join("")+'</div>';
   const items=itemsForDay(S.day); const mine=items.filter(i=>!i.fixed||i.booked).length;
   h+='<div class="sh"><h2>'+dayLong(S.day).replace(/ Nov$/,"")+'</h2><span>'+(mine?mine+" planned":"")+'</span></div>';
-  if(items.length) h+='<div class="group">'+clusters(items).map(c=>c.length>1?splitRow(c):(c[0].gift?giftRow(c[0]):planRow(c[0]))).join("")+'</div>';
+  if(items.length) h+='<div class="group">'+planListHTML(items)+'</div>';
   if(!mine) h+='<div class="empty"><h3>Nothing planned yet</h3><p>Find somewhere to eat, a show or a place to see, and add it to this day.</p><button class="btn sm tinted" data-tab="food">Browse places</button></div>';
+  h+=ideasHTML(S.day);
   h+='<div style="padding:0 16px 8px"><button class="btn plain wide" data-custom="1">'+svg("plus")+' Add your own</button></div>';
   h+=scoreboardHTML()+letterBoxHTML();
   h+='<div class="foot">Changes sync to both phones straight away. <a href="#" data-replay="1" style="color:var(--tram)">Replay intro</a>.'+(ME?' You\'re signed in as <a href="#" data-rename="1" style="color:var(--tram)">'+esc(ME)+'</a>.':'')+'</div>';
@@ -1263,6 +1536,7 @@ function venueRow(v){
   const now=nowMel(); const inPlan=S.plan.some(p=>p.ref===v.id);
   const label=(v.t&&v.t[0])?(GROUP_LABEL[v.t[0]]||v.t[0]):"";
   let meta=[];
+  if((v.t||[]).includes("Hidden gems")) meta.push('<span class="gem">✦ Hidden gem</span>');
   if(v.r) meta.push('<span class="star">'+v.r.toFixed(1)+'</span>');
   if(v.price && v.cat!=="event") meta.push('<span>'+esc(v.price)+'</span>');
   meta.push('<span>'+esc(distInfo(v).txt.replace("tram/Uber","ride"))+'</span>');
@@ -1378,7 +1652,7 @@ function startAdd(v){ const vd=validDays(v); const day=vd.includes(S.day)?S.day:
 /* ---------- Events ---------- */
 document.addEventListener("click",async e=>{
   const rp=e.target.closest("[data-replay]"); if(rp){ e.preventDefault(); const r=document.getElementById("intro"); if(r){ r.hidden=false; playIntro(true); } return; }
-  const rn=e.target.closest("[data-rename]"); if(rn){ e.preventDefault(); ME=""; try{localStorage.removeItem(NKEY);}catch(_){} render(); return; }
+  const rn=e.target.closest("[data-rename]"); if(rn){ e.preventDefault(); try{localStorage.removeItem(UNLOCK_KEY);}catch(_){} showGate(null); return; }
   const b=e.target.closest("button,[data-open-v]"); if(!b) return;
   const D=b.dataset;
   if(D.gift){ tapGift(); return; }
@@ -1390,6 +1664,7 @@ document.addEventListener("click",async e=>{
   if(D.grp){ S.group[exploreCat()]=D.grp; render(); return; }
   if(D.open){ S.openNow=!S.openNow; render(); return; }
   if(D.add){ e.stopPropagation(); startAdd(VBY[D.add]); return; }
+  if(D.sug){ e.stopPropagation(); const sv=VBY[D.sug], st0=toMin(D.st||"12:00"), en0=Math.min(1439,st0+(D.sb?Math.min(SUG_DUR[sv.cat],60):SUG_DUR[sv.cat])); openSheet({mode:"add",v:sv,day:S.day,time:D.st||"",end:D.st?m2t(en0):"",note:""}); return; }
   if(D.openV){ openSheet({mode:"venue",v:VBY[D.openV]}); return; }
   if(D.custom){ openSheet({mode:"custom",v:null,day:S.day,time:"",note:"",name:"",icon:"star"}); return; }
   if(D.fixed){ openSheet({mode:"fixed",id:D.fixed}); return; }
@@ -1855,8 +2130,36 @@ function playLetter(mark){
   $("#lClose").onclick=()=>{ root.classList.remove("on"); setTimeout(()=>{ root.hidden=true; },500); render(); };
 }
 
+/* ---------- Sign-in gate (runs before the intro) ---------- */
+const UNLOCK_KEY="mel-unlocked";
+const PW_SHA="17e0c5891e02a6afcdaeb5f2c9d7acf6fd5189727f90cfe47fa9d273739f50c2", PW_DJB=1908216853;
+async function pwOk(v){
+  v=(v||"").trim().toLowerCase();
+  try{ if(window.crypto&&crypto.subtle){ const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(v)); return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")===PW_SHA; } }catch(e){}
+  let h=5381; for(const c of v) h=((h*33)^c.charCodeAt(0))>>>0; return h===PW_DJB;
+}
+const isUnlocked=()=>{ try{ return localStorage.getItem(UNLOCK_KEY)==="1" && /^(ash|fred)$/i.test(localStorage.getItem(NKEY)||""); }catch(e){ return false; } };
+function showGate(then){
+  const g=$("#gate"), card=$("#gtCard"), pw=$("#gtPw"), go=$("#gtGo"), err=$("#gtErr");
+  $("#gtAsh").src=FACE_ASH; $("#gtFred").src=FACE_FRED;
+  let who=/^(ash|fred)$/i.test(ME||"")?(ME.charAt(0).toUpperCase()+ME.slice(1).toLowerCase()):"";
+  const sync=()=>{ g.querySelectorAll("[data-who]").forEach(b=>b.classList.toggle("on",b.dataset.who===who)); go.disabled=!who||!pw.value; };
+  g.querySelectorAll("[data-who]").forEach(b=>b.onclick=()=>{ who=b.dataset.who; err.textContent=""; sync(); pw.focus(); });
+  pw.oninput=()=>{ err.textContent=""; sync(); };
+  card.onsubmit=async e=>{ e.preventDefault(); if(!who){ err.textContent="Tap Ash or Fred first"; return; }
+    if(await pwOk(pw.value)){
+      ME=who; try{ localStorage.setItem(NKEY,who); localStorage.setItem(UNLOCK_KEY,"1"); }catch(_){}
+      pw.blur(); g.classList.add("out"); setTimeout(()=>{ g.hidden=true; g.classList.remove("out"); },450);
+      render(); then&&then();
+    } else { err.textContent="That's not the password"; card.classList.remove("shake"); void card.offsetWidth; card.classList.add("shake"); pw.select(); }
+  };
+  pw.value=""; err.textContent=""; sync(); g.hidden=false;
+}
+window.gateOpen=()=>!$("#gate").hidden;
+
 render();
-playIntro();
+if(isUnlocked()) playIntro();
+else showGate(()=>{ const r=document.getElementById("intro"); if(r){ r.hidden=false; playIntro(); } });
 if(location.hash==="#preview-letter"){ const r=document.getElementById("intro"); if(r) r.hidden=true; setTimeout(()=>playLetter(false),300); }
 if(location.hash==="#preview-surprise"){ const r=document.getElementById("intro"); if(r) r.hidden=true; setTimeout(()=>playGift(false),300); }
 window.addEventListener("load",()=>{ try{ if("serviceWorker" in navigator && window.top===window) navigator.serviceWorker.register("sw.js").catch(()=>{}); }catch(e){} });
